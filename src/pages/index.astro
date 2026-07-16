@@ -1,0 +1,63 @@
+---
+import BaseLayout from '../layouts/BaseLayout.astro';
+import PostCard from '../components/PostCard.astro';
+import { SITE_TITLE, SITE_DESCRIPTION, AUTHOR } from '../consts';
+import { getPublishedPosts, getTagCounts } from '../utils';
+
+const posts = await getPublishedPosts();
+const tagCounts = getTagCounts(posts).slice(0, 10);
+---
+
+<BaseLayout title={SITE_TITLE} description={SITE_DESCRIPTION}>
+  <!-- Hero -->
+  <section class="relative overflow-hidden">
+    <div
+      class="pointer-events-none absolute inset-0 -z-10 bg-gradient-to-b from-brand-50/70 to-transparent dark:from-brand-900/10"
+    >
+    </div>
+    <div class="mx-auto max-w-5xl px-4 py-16 sm:px-6 sm:py-24">
+      <div class="animate-fade-up">
+        <span
+          class="inline-flex items-center gap-1.5 rounded-full border border-brand-200 bg-white/60 px-3 py-1 text-xs font-medium text-brand-700 dark:border-brand-800 dark:bg-brand-900/20 dark:text-brand-300"
+        >
+          <span class="h-1.5 w-1.5 rounded-full bg-brand-500"></span>
+          持续更新中
+        </span>
+        <h1 class="mt-5 text-4xl font-bold tracking-tight text-slate-900 sm:text-5xl dark:text-slate-50">
+          你好，我是 {AUTHOR.name} 👋
+        </h1>
+        <p class="mt-4 max-w-2xl text-lg leading-8 text-slate-600 dark:text-slate-400">
+          {SITE_DESCRIPTION}
+        </p>
+        <div class="mt-6 flex flex-wrap gap-2">
+          {tagCounts.map(({ tag }) => (
+            <a
+              href={`/tags/${encodeURIComponent(tag)}`}
+              class="rounded-full bg-slate-100 px-3 py-1 text-sm text-slate-600 transition hover:bg-brand-100 hover:text-brand-700 dark:bg-slate-800 dark:text-slate-300 dark:hover:bg-brand-900/40 dark:hover:text-brand-300"
+            >
+              #{tag}
+            </a>
+          ))}
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- 文章列表 -->
+  <section class="mx-auto max-w-5xl px-4 pb-20 sm:px-6">
+    <div class="mb-6 flex items-baseline justify-between">
+      <h2 class="text-2xl font-bold text-slate-900 dark:text-slate-100">最新文章</h2>
+      <span class="text-sm text-slate-400 dark:text-slate-500">共 {posts.length} 篇</span>
+    </div>
+
+    {posts.length === 0 ? (
+      <p class="rounded-2xl border border-dashed border-slate-300 p-12 text-center text-slate-500 dark:border-slate-700">
+        还没有文章，去 <code class="rounded bg-slate-100 px-1.5 py-0.5 dark:bg-slate-800">src/content/posts</code> 添加第一篇吧～
+      </p>
+    ) : (
+      <div class="grid grid-cols-1 gap-6 md:grid-cols-2 lg:grid-cols-3">
+        {posts.map((post) => <PostCard post={post} />)}
+      </div>
+    )}
+  </section>
+</BaseLayout>

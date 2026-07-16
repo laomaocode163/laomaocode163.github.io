@@ -1,0 +1,17 @@
+---
+// JSON-LD 结构化数据组件，用于 SEO
+interface Props {
+  type: 'WebSite' | 'BlogPosting' | 'Person' | 'BreadcrumbList';
+  data: Record<string, unknown>;
+}
+
+const { type, data } = Astro.props;
+
+const ld = {
+  '@context': 'https://schema.org',
+  '@type': type,
+  ...data,
+};
+---
+
+<script type="application/ld+json" is:inline set:html={JSON.stringify(ld)}></script>

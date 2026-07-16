@@ -1,0 +1,110 @@
+---
+// 站内搜索页 — 基于 Pagefind 的全站搜索
+import BaseLayout from '../layouts/BaseLayout.astro';
+---
+
+<BaseLayout title="搜索">
+  <div class="mx-auto max-w-3xl px-4 py-12 sm:px-6">
+    <!-- 搜索输入区 -->
+    <div class="mb-10">
+      <h1 class="mb-2 text-3xl font-bold text-gray-900 dark:text-white">搜索文章</h1>
+      <p class="text-gray-500 dark:text-gray-400">输入关键词搜索博客中的文章内容。</p>
+    </div>
+
+    <div id="search-box" class="relative mb-10">
+      <div class="pointer-events-none absolute inset-y-0 left-0 flex items-center pl-4">
+        <svg
+          class="h-5 w-5 text-gray-400"
+          fill="none"
+          stroke="currentColor"
+          viewBox="0 0 24 24"
+        >
+          <path
+            stroke-linecap="round"
+            stroke-linejoin="round"
+            stroke-width="2"
+            d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z"
+          />
+        </svg>
+      </div>
+      <input
+        id="search-input"
+        type="text"
+        placeholder="输入关键词搜索…"
+        class="w-full rounded-xl border border-gray-200 bg-white py-3.5 pl-12 pr-4 text-gray-900 shadow-sm transition focus:border-indigo-500 focus:outline-none focus:ring-2 focus:ring-indigo-500/20 dark:border-gray-700 dark:bg-gray-900 dark:text-white dark:focus:border-indigo-400"
+      />
+    </div>
+
+    <div id="search-results" class="space-y-5">
+      <p class="text-center text-gray-400 dark:text-gray-500">在上方输入关键词开始搜索</p>
+    </div>
+  </div>
+</BaseLayout>
+
+<script>
+  // 动态加载 Pagefind，避免构建时找不到模块
+  async function loadPagefind() {
+    const script = document.createElement('script');
+    script.src = '/pagefind/pagefind.js';
+    document.head.appendChild(script);
+    return new Promise<void>((resolve) => {
+      script.onload = () => resolve();
+    });
+  }
+
+  const input = document.getElementById('search-input') as HTMLInputElement;
+  const results = document.getElementById('search-results') as HTMLElement;
+
+  let timer: ReturnType<typeof setTimeout>;
+  let pagefindReady = false;
+
+  // 预先加载 Pagefind
+  loadPagefind().then(() => { pagefindReady = true; });
+
+  input?.addEventListener('input', () => {
+    clearTimeout(timer);
+    const query = input.value.trim();
+    if (!query) {
+      results.innerHTML =
+        '<p class="text-center text-gray-400 dark:text-gray-500">在上方输入关键词开始搜索</p>';
+      return;
+    }
+    if (!pagefindReady) {
+      results.innerHTML =
+        '<p class="text-center text-gray-400 dark:text-gray-500">搜索索引加载中…</p>';
+      return;
+    }
+    timer = setTimeout(async () => {
+      results.innerHTML =
+        '<p class="text-center text-gray-400 dark:text-gray-500">搜索中…</p>';
+      try {
+        const pf = await (window as any).pagefind.debouncedSearch(query);
+        if (!pf?.results?.length) {
+          results.innerHTML =
+            '<p class="text-center text-gray-400 dark:text-gray-500">未找到相关结果</p>';
+          return;
+        }
+        const items = await Promise.all(pf.results.map((r: any) => r.data()));
+        results.innerHTML = items
+          .map(
+            (item: any) => `
+          <a
+            href="${item.url}"
+            class="block rounded-xl border border-gray-100 bg-white p-5 shadow-sm transition hover:shadow-md dark:border-gray-800 dark:bg-gray-900"
+          >
+            <h3 class="mb-1.5 text-lg font-semibold text-gray-900 dark:text-white">${item.meta?.title ?? '无标题'}</h3>
+            <p class="mb-2 line-clamp-2 text-sm text-gray-500 dark:text-gray-400">${item.excerpt ?? ''}</p>
+            <span class="inline-flex items-center gap-1 text-xs text-indigo-500 dark:text-indigo-400">
+              <svg class="h-3 w-3" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 7l5 5m0 0l-5 5m5-5H6"/></svg>
+              阅读文章
+            </span>
+          </a>`
+          )
+          .join('');
+      } catch {
+        results.innerHTML =
+          '<p class="text-center text-amber-600 dark:text-amber-400">搜索出错，请稍后重试或确保已运行 <code>npm run build</code> 生成索引。</p>';
+      }
+    }, 300);
+  });
+</script>

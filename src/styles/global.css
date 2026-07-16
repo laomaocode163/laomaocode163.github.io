@@ -1,0 +1,141 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+@layer base {
+  :root {
+    color-scheme: light;
+  }
+  html.dark {
+    color-scheme: dark;
+  }
+  html {
+    scroll-behavior: smooth;
+    -webkit-text-size-adjust: 100%;
+  }
+  body {
+    @apply bg-slate-50 text-slate-800 antialiased dark:bg-slate-950 dark:text-slate-200;
+    font-feature-settings: 'cv02', 'cv03', 'cv04', 'cv11';
+  }
+  ::selection {
+    @apply bg-brand-500/30;
+  }
+}
+
+@layer components {
+  /* 文章正文排版 */
+  .prose {
+    @apply leading-8 text-slate-700 dark:text-slate-300;
+  }
+  .prose h2 {
+    @apply mt-12 mb-4 scroll-mt-24 text-2xl font-bold text-slate-900 dark:text-slate-100;
+  }
+  .prose h3 {
+    @apply mt-8 mb-3 scroll-mt-24 text-xl font-semibold text-slate-900 dark:text-slate-100;
+  }
+  .prose p {
+    @apply my-5;
+  }
+  .prose a {
+    @apply font-medium text-brand-600 underline decoration-brand-300 underline-offset-4 transition hover:text-brand-500 dark:text-brand-400 dark:decoration-brand-700;
+  }
+  .prose ul {
+    @apply my-5 list-disc space-y-2 pl-6;
+  }
+  .prose ol {
+    @apply my-5 list-decimal space-y-2 pl-6;
+  }
+  .prose blockquote {
+    @apply my-6 border-l-4 border-brand-400 bg-brand-50/60 py-2 pl-5 pr-4 text-slate-600 dark:bg-brand-900/20 dark:text-slate-300;
+  }
+  .prose img {
+    @apply my-6 rounded-xl shadow-sm;
+  }
+  .prose hr {
+    @apply my-10 border-slate-200 dark:border-slate-800;
+  }
+  .prose code:not(pre code) {
+    @apply rounded bg-slate-100 px-1.5 py-0.5 text-[0.875em] font-medium text-brand-600 dark:bg-slate-800 dark:text-brand-300;
+  }
+  .prose pre {
+    @apply my-6 overflow-x-auto rounded-xl border border-slate-200 bg-slate-900 p-4 text-sm leading-7 text-slate-100 dark:border-slate-800;
+  }
+  .prose pre code {
+    @apply bg-transparent p-0 text-slate-100;
+  }
+  .prose table {
+    @apply my-6 w-full border-collapse text-sm;
+  }
+  .prose th,
+  .prose td {
+    @apply border border-slate-200 px-3 py-2 text-left dark:border-slate-800;
+  }
+
+  /* Shiki 双主题：根据 html.dark 切换 */
+  .prose .astro-code,
+  .astro-code {
+    @apply bg-transparent !important;
+  }
+  html.dark .astro-code,
+  html.dark .astro-code span {
+    color: var(--shiki-dark) !important;
+    background-color: var(--shiki-dark-bg) !important;
+  }
+
+  /* Mermaid 流程图 */
+  .mermaid-container svg {
+    max-width: 100%;
+    height: auto;
+  }
+  .mermaid-container svg .node rect,
+  .mermaid-container svg .node circle,
+  .mermaid-container svg .node ellipse,
+  .mermaid-container svg .node polygon,
+  .mermaid-container svg .node path {
+    stroke: #6366f1 !important;
+    stroke-width: 2px !important;
+  }
+  .mermaid-container svg .edgePath .path {
+    stroke: #94a3b8 !important;
+    stroke-width: 1.5px !important;
+  }
+  .mermaid-container svg .label {
+    font-family: 'Inter', system-ui, sans-serif !important;
+  }
+  .mermaid-container svg .cluster rect {
+    stroke: #cbd5e1 !important;
+    fill: #f8fafc !important;
+  }
+  html.dark .mermaid-container svg .node rect,
+  html.dark .mermaid-container svg .node circle,
+  html.dark .mermaid-container svg .node ellipse,
+  html.dark .mermaid-container svg .node polygon,
+  html.dark .mermaid-container svg .node path {
+    stroke: #818cf8 !important;
+    fill: #1e1b4b !important;
+  }
+  html.dark .mermaid-container svg .label {
+    fill: #e2e8f0 !important;
+  }
+  html.dark .mermaid-container svg .edgeLabel {
+    background-color: #1e293b !important;
+  }
+  html.dark .mermaid-container svg .edgeLabel span {
+    color: #94a3b8 !important;
+  }
+  html.dark .mermaid-container svg .cluster rect {
+    stroke: #475569 !important;
+    fill: #0f172a !important;
+  }
+
+  /* 文章内图片 */
+  .prose .article-image {
+    @apply my-8;
+  }
+  .prose .article-image img {
+    @apply w-full rounded-xl border border-gray-200 shadow-sm dark:border-gray-700;
+  }
+  .prose .article-image figcaption {
+    @apply mt-2 text-center text-sm text-gray-400 dark:text-gray-500;
+  }
+}

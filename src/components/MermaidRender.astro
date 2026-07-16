@@ -1,0 +1,51 @@
+---
+// Mermaid 流程图渲染组件
+// 用法：在文章 Markdown 中用 ```mermaid 代码块编写图表，此组件会自动渲染
+---
+<script>
+  import mermaid from 'mermaid';
+
+  let seq = 0;
+
+  function renderMermaid() {
+    const isDark = document.documentElement.classList.contains('dark');
+
+    // Shiki 会将 ```mermaid 输出为 <pre data-language="mermaid">，<code> 没有 language-mermaid 类
+    const blocks = document.querySelectorAll('pre[data-language="mermaid"]');
+    blocks.forEach(async (pre) => {
+      // 保存原始源码，供主题切换时重新渲染
+      const code = pre.getAttribute('data-mermaid-src') || pre.textContent || '';
+      pre.setAttribute('data-mermaid-src', code);
+      pre.hidden = true;
+
+      // 复用已创建的容器，避免重复插入
+      let container = pre.nextElementSibling;
+      if (!container || !container.classList.contains('mermaid-container')) {
+        container = document.createElement('div');
+        container.className =
+          'mermaid-container my-8 flex justify-center rounded-xl border border-gray-200 bg-white p-4 dark:border-gray-700 dark:bg-gray-900';
+        pre.insertAdjacentElement('afterend', container);
+      }
+
+      try {
+        const { svg } = await mermaid.render(`mermaid-${seq++}`, code);
+        container.innerHTML = svg;
+        container.classList.remove('border-red-300', 'dark:border-red-700');
+      } catch {
+        // mermaid 语法错误：保留原始代码
+        container.textContent = code;
+        container.classList.add('border-red-300', 'dark:border-red-700');
+      }
+    });
+  }
+
+  // DOM 加载完成后渲染
+  renderMermaid();
+
+  // 监听主题切换，按当前主题重新渲染流程图
+  const observer = new MutationObserver(() => renderMermaid());
+  observer.observe(document.documentElement, {
+    attributes: true,
+    attributeFilter: ['class'],
+  });
+</script>

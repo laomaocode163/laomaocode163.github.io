@@ -1,0 +1,139 @@
+---
+import { getCollection, render } from 'astro:content';
+import BaseLayout from '../../layouts/BaseLayout.astro';
+import JsonLd from '../../components/JsonLd.astro';
+import TagPill from '../../components/TagPill.astro';
+import TableOfContents from '../../components/TableOfContents.astro';
+import Giscus from '../../components/Giscus.astro';
+import MermaidRender from '../../components/MermaidRender.astro';
+import { AUTHOR } from '../../consts';
+import { getPublishedPosts } from '../../utils';
+
+export async function getStaticPaths() {
+  const posts = await getCollection('posts', ({ data }) => !data.draft);
+  return posts.map((post) => ({
+    params: { slug: post.id },
+    props: { post },
+  }));
+}
+
+const { post } = Astro.props;
+const { Content, headings } = await render(post);
+const { title, description, pubDate, updatedDate, tags, author } = post.data;
+
+const dateStr = pubDate.toLocaleDateString('zh-CN', {
+  year: 'numeric',
+  month: 'long',
+  day: 'numeric',
+});
+
+const canonical = new URL(`/posts/${post.id}/`, Astro.site ?? Astro.url).href;
+
+// 上一篇 / 下一篇（基于倒序列表）
+const all = await getPublishedPosts();
+const index = all.findIndex((p) => p.id === post.id);
+const prev = index > 0 ? all[index - 1] : null;
+const next = index >= 0 && index < all.length - 1 ? all[index + 1] : null;
+---
+
+<BaseLayout title={title} description={description} ogType="article">
+  <!-- BlogPosting 结构化数据 -->
+  <JsonLd type="BlogPosting" data={{
+    headline: title,
+    description: description,
+    datePublished: pubDate.toISOString(),
+    dateModified: (updatedDate ?? pubDate).toISOString(),
+    author: { '@type': 'Person', name: author || AUTHOR.name },
+    url: canonical,
+    keywords: tags.join(', '),
+  }} />
+
+  <div class="mx-auto max-w-6xl px-4 py-10 sm:px-6">
+    <!-- 面包屑（结构化数据） -->
+    <nav
+      class="mb-6 text-sm text-slate-400 dark:text-slate-500"
+      aria-label="Breadcrumb"
+    >
+      <ol class="flex items-center gap-2">
+        <li><a href="/" class="transition hover:text-brand-600 dark:hover:text-brand-400">首页</a></li>
+        <li>/</li>
+        <li class="text-slate-600 dark:text-slate-300">{title}</li>
+      </ol>
+    </nav>
+    <JsonLd type="BreadcrumbList" data={{
+      itemListElement: [
+        { '@type': 'ListItem', position: 1, name: '首页', item: new URL('/', Astro.site ?? Astro.url).href },
+        { '@type': 'ListItem', position: 2, name: title, item: canonical },
+      ],
+    }} />
+
+    <div class="grid grid-cols-1 gap-10 lg:grid-cols-[1fr_240px]">
+      <!-- 正文 -->
+      <article class="min-w-0">
+        <header class="mb-8 border-b border-slate-200 pb-8 dark:border-slate-800">
+          <div class="mb-3 flex flex-wrap gap-2">
+            {tags.map((tag) => <TagPill tag={tag} />)}
+          </div>
+          <h1 class="text-3xl font-bold leading-tight text-slate-900 sm:text-4xl dark:text-slate-50">
+            {title}
+          </h1>
+          <p class="mt-3 text-lg text-slate-500 dark:text-slate-400">{description}</p>
+          <div class="mt-4 flex flex-wrap items-center gap-x-4 gap-y-1 text-sm text-slate-400 dark:text-slate-500">
+            <span>✍️ {author || AUTHOR.name}</span>
+            <span>📅 {dateStr}</span>
+            {updatedDate && <span>🔄 更新于 {updatedDate.toLocaleDateString('zh-CN')}</span>}
+          </div>
+        </header>
+
+        <div class="prose max-w-none">
+          <Content />
+        </div>
+
+        <!-- Mermaid 流程图渲染 -->
+        <MermaidRender />
+
+        <!-- 上一篇 / 下一篇 -->
+        <nav class="mt-12 grid grid-cols-1 gap-4 border-t border-slate-200 pt-8 sm:grid-cols-2 dark:border-slate-800">
+          {
+            prev ? (
+              <a
+                href={`/posts/${prev.id}`}
+                class="group rounded-xl border border-slate-200 p-4 transition hover:border-brand-300 dark:border-slate-800 dark:hover:border-brand-700"
+              >
+                <span class="text-xs text-slate-400">← 上一篇</span>
+                <p class="mt-1 font-medium text-slate-800 group-hover:text-brand-600 dark:text-slate-200 dark:group-hover:text-brand-400">
+                  {prev.data.title}
+                </p>
+              </a>
+            ) : (
+              <span />
+            )
+          }
+          {
+            next && (
+              <a
+                href={`/posts/${next.id}`}
+                class="group rounded-xl border border-slate-200 p-4 text-right transition hover:border-brand-300 dark:border-slate-800 dark:hover:border-brand-700"
+              >
+                <span class="text-xs text-slate-400">下一篇 →</span>
+                <p class="mt-1 font-medium text-slate-800 group-hover:text-brand-600 dark:text-slate-200 dark:group-hover:text-brand-400">
+                  {next.data.title}
+                </p>
+              </a>
+            )
+          }
+        </nav>
+
+        <!-- 评论 -->
+        <Giscus />
+      </article>
+
+      <!-- 侧栏目录（桌面端 sticky） -->
+      <aside class="hidden lg:block">
+        <div class="sticky top-24">
+          <TableOfContents headings={headings} />
+        </div>
+      </aside>
+    </div>
+  </div>
+</BaseLayout>
