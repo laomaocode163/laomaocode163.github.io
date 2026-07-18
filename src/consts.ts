@@ -4,7 +4,7 @@ export const SITE_DESCRIPTION =
   '一个专注于编程、开发与工具分享的个人博客，也记录生活与思考。';
 export const AUTHOR = {
   name: '念铭',
-  avatar: '/avatar.svg',
+  avatar: '/avatar.png',
   bio: '全栈开发者，喜欢折腾前端工程化、DevOps 与各种效率工具。',
   email: 'hello@nianmng.example.com',
   github: 'https://github.com/nianmng',
