@@ -74,13 +74,13 @@ const monthNames = [
                         </h5>
                       </div>
                       {post.data.description && (
-                        <p class="mt-2 line-clamp-2 pl-[3.25rem] text-sm leading-6 text-slate-600 dark:text-slate-400">
+                        <p class="mt-2 line-clamp-2 pl-0 sm:pl-[3.25rem] text-sm leading-6 text-slate-600 dark:text-slate-400">
                           {post.data.description}
                         </p>
                       )}
                     </a>
                     {post.data.tags.length > 0 && (
-                      <div class="mt-2 flex flex-wrap gap-2 pl-[3.25rem]">
+                      <div class="mt-2 flex flex-wrap gap-2 pl-0 sm:pl-[3.25rem]">
                         {post.data.tags.map((tag) => <TagPill tag={tag} />)}
                       </div>
                     )}
