@@ -10,8 +10,6 @@ interface Props {
   description?: string;
   ogImage?: string;
   ogType?: 'website' | 'article';
-  /** 是否显示文章目录容器（详情页用） */
-  showToc?: boolean;
 }
 
 const {
@@ -61,13 +59,7 @@ const fullOgImage = new URL(ogImage, Astro.site ?? Astro.url).href;
       url: Astro.site?.href ?? canonical,
     }} />
 
-    <!-- 字体 -->
-    <link rel="preconnect" href="https://fonts.googleapis.com" />
-    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
-    <link
-      href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500&display=swap"
-      rel="stylesheet"
-    />
+    <!-- 字体由 @fontsource 自托管，见 global.css 顶部 -->
 
     <!-- 主题防闪烁：在首屏渲染前同步设置 html.dark，避免 FOUC -->
     <script is:inline>
@@ -100,7 +92,7 @@ const fullOgImage = new URL(ogImage, Astro.site ?? Astro.url).href;
 
             const wrapper = document.createElement('div');
             wrapper.className = 'code-block';
-            pre.parentNode.insertBefore(wrapper, pre);
+            pre.parentElement?.insertBefore(wrapper, pre);
             wrapper.appendChild(pre);
 
             const btn = document.createElement('button');
@@ -113,7 +105,7 @@ const fullOgImage = new URL(ogImage, Astro.site ?? Astro.url).href;
 
             btn.addEventListener('click', async () => {
               const code = pre.querySelector('code');
-              const text = (code ? code.innerText : pre.innerText).replace(/\n$/, '');
+              const text = (code?.textContent ?? pre.textContent ?? '').replace(/\n$/, '');
               try {
                 await navigator.clipboard.writeText(text);
               } catch (e) {
@@ -127,6 +119,7 @@ const fullOgImage = new URL(ogImage, Astro.site ?? Astro.url).href;
                 document.body.removeChild(ta);
               }
               const label = btn.querySelector('span');
+              if (!label) return;
               const original = label.textContent;
               btn.classList.add('copied');
               label.textContent = '已复制';

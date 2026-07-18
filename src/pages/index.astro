@@ -2,21 +2,11 @@
 import BaseLayout from '../layouts/BaseLayout.astro';
 import ArchivePage from '../components/ArchivePage.astro';
 import { SITE_DESCRIPTION } from '../consts';
-import { getPublishedPosts } from '../utils';
+import { getPublishedPosts, buildArchivePage } from '../utils';
 
-const PAGE_SIZE = 5;
 const all = await getPublishedPosts();
-const lastPage = Math.max(1, Math.ceil(all.length / PAGE_SIZE));
-const page = {
-  data: all.slice(0, PAGE_SIZE),
-  total: all.length,
-  currentPage: 1,
-  lastPage,
-  size: PAGE_SIZE,
-  url: { current: '/', prev: undefined, next: lastPage > 1 ? '/2' : undefined },
-};
+const page = buildArchivePage(all, 1);
 ---
-
 <BaseLayout description={SITE_DESCRIPTION}>
   <ArchivePage page={page} />
 </BaseLayout>

@@ -9,7 +9,7 @@
 - 🏷️ **标签分类**：标签聚合页 + 标签详情页，按标签检索文章
 - 🔍 **站内搜索**：基于 [Pagefind](https://pagefind.app) 的全站搜索，构建后自动生成索引
 - 📡 **RSS 订阅**：`/rss.xml` 自动生成，支持 RSS 阅读器订阅
-- 💬 **评论系统**：集成 [Giscus](https://giscus.app)，基于 GitHub Discussions
+- 💬 **评论系统（可选）**：内置 [Giscus](https://giscus.app) 组件（基于 GitHub Discussions），在 `consts.ts` 配置 `GISCUS` 后启用
 - 👤 **关于页面**：独立的博主介绍页
 - 🌗 **暗色模式**：亮/暗主题一键切换，偏好持久化 + 系统跟随（防闪烁）
 - 🔎 **SEO 优化**：Sitemap 自动生成、OG 标签、Twitter Card、JSON-LD 结构化数据、规范链接
@@ -103,7 +103,7 @@ src/
 - 修改站点名、作者、导航：编辑 `src/consts.ts`
 - 修改主题色 / 字体：编辑 `tailwind.config.mjs`
 - 修改正式域名：编辑 `astro.config.mjs` 中的 `site`
-- 配置 Giscus 评论：编辑 `src/components/Giscus.astro` 中的 repo / repoId / category / categoryId
+- 配置 Giscus 评论（可选）：在 `src/consts.ts` 中填写并启用 `GISCUS`（repo / repoId / category / categoryId），默认未启用
 
 ## 📡 RSS 订阅
 

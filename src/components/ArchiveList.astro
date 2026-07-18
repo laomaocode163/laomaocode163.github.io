@@ -1,5 +1,6 @@
 ---
 import type { Post } from '../utils';
+import { groupPostsByDate } from '../utils';
 import TagPill from './TagPill.astro';
 
 interface Props {
@@ -7,27 +8,8 @@ interface Props {
 }
 const { posts } = Astro.props;
 
-type MonthGroup = { month: number; posts: Post[] };
-type YearGroup = { year: number; months: MonthGroup[] };
-
-// 按年月分组（posts 已按 pubDate 倒序，分组顺序天然保持倒序）
-const groups: YearGroup[] = [];
-for (const post of posts) {
-  const d = post.data.pubDate;
-  const year = d.getFullYear();
-  const month = d.getMonth();
-  let yGroup = groups.find((g) => g.year === year);
-  if (!yGroup) {
-    yGroup = { year, months: [] };
-    groups.push(yGroup);
-  }
-  let mGroup = yGroup.months.find((m) => m.month === month);
-  if (!mGroup) {
-    mGroup = { month, posts: [] };
-    yGroup.months.push(mGroup);
-  }
-  mGroup.posts.push(post);
-}
+// 按年/月分组（posts 已按 pubDate 倒序，分组顺序天然保持倒序）
+const groups = groupPostsByDate(posts);
 
 const monthNames = [
   '一月', '二月', '三月', '四月', '五月', '六月',

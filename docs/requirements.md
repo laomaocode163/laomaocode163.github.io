@@ -1,6 +1,6 @@
 # 个人技术博客 —— 需求文档
 
-> 版本：v1.1 ｜ 更新日期：2026-07-17 ｜ 状态：已实现
+> 版本：v1.1 ｜ 更新日期：2026-07-17 ｜ 状态：已实现（评论为可选，默认未启用）
 
 ## 1. 产品概述
 
@@ -35,7 +35,7 @@
 - 自动生成**文章目录（TOC）**，点击锚点平滑跳转；
 - 显示文章元信息（作者 / 日期 / 标签）；
 - 文末提供「上一篇 / 下一篇」导航；
-- **Giscus 评论系统**（基于 GitHub Discussions）。
+- **Giscus 评论系统（可选）**：基于 GitHub Discussions，配置后启用。
 
 ### 2.3 标签分类
 
@@ -96,7 +96,7 @@
 - **搜索**：Pagefind（构建后索引，纯客户端）
 - **RSS**：@astrojs/rss
 - **Sitemap**：@astrojs/sitemap
-- **评论**：Giscus（GitHub Discussions）
+- **评论（可选）**：Giscus（GitHub Discussions），配置后启用
 - **语言**：TypeScript
 
 ### 5.2 目录结构

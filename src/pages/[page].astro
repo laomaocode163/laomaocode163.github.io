@@ -2,30 +2,16 @@
 import BaseLayout from '../layouts/BaseLayout.astro';
 import ArchivePage from '../components/ArchivePage.astro';
 import { SITE_TITLE, SITE_DESCRIPTION } from '../consts';
-import { getPublishedPosts } from '../utils';
+import { getPublishedPosts, buildArchivePage, PAGE_SIZE } from '../utils';
 
 export async function getStaticPaths() {
-  const PAGE_SIZE = 5;
   const all = await getPublishedPosts();
   const lastPage = Math.max(1, Math.ceil(all.length / PAGE_SIZE));
   const paths = [];
   for (let n = 2; n <= lastPage; n++) {
     paths.push({
       params: { page: String(n) },
-      props: {
-        page: {
-          data: all.slice((n - 1) * PAGE_SIZE, n * PAGE_SIZE),
-          total: all.length,
-          currentPage: n,
-          lastPage,
-          size: PAGE_SIZE,
-          url: {
-            current: `/${n}`,
-            prev: n === 2 ? '/' : `/${n - 1}`,
-            next: n < lastPage ? `/${n + 1}` : undefined,
-          },
-        },
-      },
+      props: { page: buildArchivePage(all, n) },
     });
   }
   return paths;

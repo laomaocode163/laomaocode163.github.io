@@ -43,7 +43,16 @@ import BaseLayout from '../layouts/BaseLayout.astro';
 
 <!-- Pagefind 为 ES Module，需用 type="module" + is:inline 加载，避免 Astro 构建期解析与经典脚本的 export 语法错误 -->
 <script type="module" is:inline>
-  import * as pagefind from '/pagefind/pagefind.js';
+  let pagefindMod = null;
+  async function getPagefind() {
+    if (pagefindMod) return pagefindMod;
+    try {
+      pagefindMod = await import('/pagefind/pagefind.js');
+      return pagefindMod;
+    } catch (e) {
+      return null;
+    }
+  }
 
   const input = document.getElementById('search-input');
   const results = document.getElementById('search-results');
@@ -61,6 +70,12 @@ import BaseLayout from '../layouts/BaseLayout.astro';
       timer = setTimeout(async () => {
         results.innerHTML =
           '<p class="text-center text-gray-400 dark:text-gray-500">搜索中…</p>';
+        const pagefind = await getPagefind();
+        if (!pagefind) {
+          results.innerHTML =
+            '<p class="text-center text-amber-600 dark:text-amber-400">尚未生成搜索索引。请先运行 <code>npm run build</code> 后再预览。</p>';
+          return;
+        }
         try {
           const pf = await pagefind.debouncedSearch(query);
           if (!pf || !pf.results || !pf.results.length) {
@@ -69,22 +84,27 @@ import BaseLayout from '../layouts/BaseLayout.astro';
             return;
           }
           const items = await Promise.all(pf.results.map((r) => r.data()));
-          results.innerHTML = items
-            .map(
-              (item) => `
-          <a
-            href="${item.url}"
-            class="block rounded-xl border border-gray-100 bg-white p-5 shadow-sm transition hover:shadow-md dark:border-gray-800 dark:bg-gray-900"
-          >
-            <h3 class="mb-1.5 text-lg font-semibold text-gray-900 dark:text-white">${item.meta?.title ?? '无标题'}</h3>
-            <p class="mb-2 line-clamp-2 text-sm text-gray-500 dark:text-gray-400">${item.excerpt ?? ''}</p>
-            <span class="inline-flex items-center gap-1 text-xs text-indigo-500 dark:text-indigo-400">
-              <svg class="h-3 w-3" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 7l5 5m0 0l-5 5m5-5H6"/></svg>
-              阅读文章
-            </span>
-          </a>`
-            )
-            .join('');
+          // 使用 DOM API 渲染，避免标题/摘要中的 HTML 引发 XSS
+          results.replaceChildren(
+            ...items.map((item) => {
+              const a = document.createElement('a');
+              a.href = item.url;
+              a.className =
+                'block rounded-xl border border-gray-100 bg-white p-5 shadow-sm transition hover:shadow-md dark:border-gray-800 dark:bg-gray-900';
+              const h3 = document.createElement('h3');
+              h3.className = 'mb-1.5 text-lg font-semibold text-gray-900 dark:text-white';
+              h3.textContent = item.meta?.title ?? '无标题';
+              const p = document.createElement('p');
+              p.className = 'mb-2 line-clamp-2 text-sm text-gray-500 dark:text-gray-400';
+              p.textContent = item.excerpt ?? '';
+              const span = document.createElement('span');
+              span.className =
+                'inline-flex items-center gap-1 text-xs text-indigo-500 dark:text-indigo-400';
+              span.textContent = '阅读文章';
+              a.append(h3, p, span);
+              return a;
+            })
+          );
         } catch (e) {
           results.innerHTML =
             '<p class="text-center text-amber-600 dark:text-amber-400">搜索出错，请稍后重试或确保已运行 <code>npm run build</code> 生成索引。</p>';

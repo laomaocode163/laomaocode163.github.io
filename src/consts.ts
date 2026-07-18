@@ -25,3 +25,15 @@ export const SOCIAL_LINKS = [
   { href: AUTHOR.twitter, label: 'Twitter' },
   { href: `mailto:${AUTHOR.email}`, label: 'Email' },
 ];
+
+// 评论系统（可选）：填写真实配置后取消下方注释即可启用 Giscus
+// 详见 https://giscus.app —— 需先在 GitHub 仓库开启 Discussions 并安装 Giscus App
+// export const GISCUS = {
+//   repo: 'owner/repo',
+//   repoId: 'REPO_ID',
+//   category: 'Announcements',
+//   categoryId: 'CATEGORY_ID',
+// };
+export const GISCUS:
+  | { repo: string; repoId: string; category: string; categoryId: string }
+  | undefined = undefined;

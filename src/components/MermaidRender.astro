@@ -1,22 +1,28 @@
 ---
-// Mermaid 流程图渲染组件
-// 用法：在文章 Markdown 中用 ```mermaid 代码块编写图表，此组件会自动渲染
+// Mermaid 流程图渲染组件（按需加载）
+// 用法：在文章 Markdown 中用 ```mermaid 代码块编写图表，本组件会在检测到 mermaid 块时才动态加载 mermaid 包
 ---
+
 <script>
-  import mermaid from 'mermaid';
+  function hasMermaid() {
+    return document.querySelectorAll('pre[data-language="mermaid"]').length > 0;
+  }
 
-  let seq = 0;
+  async function loadAndRender() {
+    if (!hasMermaid()) return;
 
-  function renderMermaid() {
+    // 仅在确有 mermaid 代码块时才加载体积较大的 mermaid 包
+    const mermaid = (await import('mermaid')).default;
     const isDark = document.documentElement.classList.contains('dark');
+    mermaid.initialize({ startOnLoad: false, theme: isDark ? 'dark' : 'neutral' });
 
-    // Shiki 会将 ```mermaid 输出为 <pre data-language="mermaid">，<code> 没有 language-mermaid 类
+    let seq = 0;
     const blocks = document.querySelectorAll('pre[data-language="mermaid"]');
     blocks.forEach(async (pre) => {
       // 保存原始源码，供主题切换时重新渲染
       const code = pre.getAttribute('data-mermaid-src') || pre.textContent || '';
       pre.setAttribute('data-mermaid-src', code);
-      pre.hidden = true;
+      pre.setAttribute('hidden', '');
 
       // 复用已创建的容器，避免重复插入
       let container = pre.nextElementSibling;
@@ -39,11 +45,12 @@
     });
   }
 
-  // DOM 加载完成后渲染
-  renderMermaid();
+  loadAndRender();
 
-  // 监听主题切换，按当前主题重新渲染流程图
-  const observer = new MutationObserver(() => renderMermaid());
+  // 监听主题切换，按当前主题重新渲染流程图（仅当存在 mermaid 块时）
+  const observer = new MutationObserver(() => {
+    if (hasMermaid()) loadAndRender();
+  });
   observer.observe(document.documentElement, {
     attributes: true,
     attributeFilter: ['class'],

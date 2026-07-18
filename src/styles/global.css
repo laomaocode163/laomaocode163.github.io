@@ -1,3 +1,10 @@
+@import '@fontsource/inter/400.css';
+@import '@fontsource/inter/500.css';
+@import '@fontsource/inter/600.css';
+@import '@fontsource/inter/700.css';
+@import '@fontsource/jetbrains-mono/400.css';
+@import '@fontsource/jetbrains-mono/500.css';
+
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
@@ -74,19 +81,12 @@
     @apply border border-slate-200 px-3 py-2 text-left dark:border-slate-800;
   }
 
-  /* Shiki 代码块：始终使用暗色主题，与页面明暗模式无关 */
-  .prose .astro-code,
-  .astro-code {
-    background-color: var(--shiki-dark-bg) !important;
-  }
-  .prose .astro-code,
-  .prose .astro-code span,
-  .astro-code,
-  .astro-code span {
+  /* Shiki 双主题：亮色跟随页面默认（github-light 内联样式），暗色切换为 github-dark */
+  html.dark .astro-code,
+  html.dark .astro-code span {
     color: var(--shiki-dark) !important;
   }
-  .prose .astro-code span,
-  .astro-code span {
+  html.dark .astro-code {
     background-color: var(--shiki-dark-bg) !important;
   }
 

@@ -1,0 +1,31 @@
+---
+// Giscus 评论组件（可选，由 consts.ts 的 GISCUS 配置开关启用）
+// 详见 https://giscus.app
+interface Props {
+  repo: string;
+  repoId: string;
+  category: string;
+  categoryId: string;
+}
+
+const { repo, repoId, category, categoryId } = Astro.props;
+---
+
+<div class="giscus mt-12"></div>
+<script
+  is:inline
+  data-repo={repo}
+  data-repo-id={repoId}
+  data-category={category}
+  data-category-id={categoryId}
+  data-mapping="pathname"
+  data-reactions-enabled="1"
+  data-emit-metadata="0"
+  data-input-position="bottom"
+  data-theme="preferred_color_scheme"
+  data-lang="zh-CN"
+  data-loading="lazy"
+  src="https://giscus.app/client.js"
+  crossorigin="anonymous"
+  async
+></script>
