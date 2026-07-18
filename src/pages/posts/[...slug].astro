@@ -73,7 +73,7 @@ const next = index >= 0 && index < all.length - 1 ? all[index + 1] : null;
           <div class="mb-3 flex flex-wrap gap-2">
             {tags.map((tag) => <TagPill tag={tag} />)}
           </div>
-          <h1 class="text-3xl font-bold leading-tight text-slate-900 sm:text-4xl dark:text-slate-50">
+          <h1 class="text-3xl font-bold leading-tight text-slate-900 sm:text-4xl dark:text-slate-50" data-pagefind-meta="title">
             {title}
           </h1>
           <p class="mt-3 text-lg text-slate-500 dark:text-slate-400">{description}</p>
@@ -84,7 +84,7 @@ const next = index >= 0 && index < all.length - 1 ? all[index + 1] : null;
           </div>
         </header>
 
-        <div class="prose max-w-none">
+        <div class="prose max-w-none" data-pagefind-body>
           <Content />
         </div>
 
