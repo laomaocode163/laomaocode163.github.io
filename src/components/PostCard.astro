@@ -4,9 +4,10 @@ import TagPill from './TagPill.astro';
 
 interface Props {
   post: CollectionEntry<'posts'>;
+  showTags?: boolean;
 }
 
-const { post } = Astro.props;
+const { post, showTags = true } = Astro.props;
 const { title, description, pubDate, tags } = post.data;
 
 const dateStr = pubDate.toLocaleDateString('zh-CN', {
@@ -38,7 +39,7 @@ const isoDate = pubDate.toISOString();
   </p>
 
   {
-    tags.length > 0 && (
+    showTags && tags.length > 0 && (
       <div class="mt-4 flex flex-wrap gap-2">
         {tags.map((tag) => (
           <TagPill tag={tag} />

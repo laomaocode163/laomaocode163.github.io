@@ -1,0 +1,96 @@
+---
+import type { Post } from '../utils';
+import TagPill from './TagPill.astro';
+
+interface Props {
+  posts: Post[];
+}
+const { posts } = Astro.props;
+
+type MonthGroup = { month: number; posts: Post[] };
+type YearGroup = { year: number; months: MonthGroup[] };
+
+// 按年月分组（posts 已按 pubDate 倒序，分组顺序天然保持倒序）
+const groups: YearGroup[] = [];
+for (const post of posts) {
+  const d = post.data.pubDate;
+  const year = d.getFullYear();
+  const month = d.getMonth();
+  let yGroup = groups.find((g) => g.year === year);
+  if (!yGroup) {
+    yGroup = { year, months: [] };
+    groups.push(yGroup);
+  }
+  let mGroup = yGroup.months.find((m) => m.month === month);
+  if (!mGroup) {
+    mGroup = { month, posts: [] };
+    yGroup.months.push(mGroup);
+  }
+  mGroup.posts.push(post);
+}
+
+const monthNames = [
+  '一月', '二月', '三月', '四月', '五月', '六月',
+  '七月', '八月', '九月', '十月', '十一月', '十二月',
+];
+---
+
+{posts.length === 0 ? (
+  <p class="rounded-2xl border border-dashed border-slate-300 p-12 text-center text-slate-500 dark:border-slate-700">
+    还没有文章，去 <code class="rounded bg-slate-100 px-1.5 py-0.5 dark:bg-slate-800">src/content/posts</code> 添加第一篇吧～
+  </p>
+) : (
+  <div class="space-y-12">
+    {groups.map((yGroup) => (
+      <div>
+        <h3 class="text-2xl font-bold tracking-tight text-slate-900 dark:text-slate-100">
+          {yGroup.year}
+        </h3>
+        <div class="mt-6 space-y-10">
+          {yGroup.months.map((mGroup) => (
+            <div>
+              <div class="flex items-center gap-3">
+                <h4 class="text-sm font-semibold uppercase tracking-wider text-brand-600 dark:text-brand-400">
+                  {monthNames[mGroup.month]}
+                </h4>
+                <span class="h-px flex-1 bg-slate-200 dark:bg-slate-800"></span>
+              </div>
+              <ul class="mt-4 space-y-5">
+                {mGroup.posts.map((post) => (
+                  <li class="group">
+                    <a
+                      href={`/posts/${post.id}/`}
+                      class="block rounded-xl px-4 py-3 transition hover:bg-slate-50 dark:hover:bg-slate-900/60"
+                    >
+                      <div class="flex items-baseline gap-3">
+                        <time
+                          datetime={post.data.pubDate.toISOString()}
+                          class="shrink-0 font-mono text-xs text-slate-400 dark:text-slate-500"
+                        >
+                          {post.data.pubDate.getMonth() + 1}月{post.data.pubDate.getDate()}日
+                        </time>
+                        <h5 class="text-lg font-semibold text-slate-900 transition-colors group-hover:text-brand-600 dark:text-slate-100 dark:group-hover:text-brand-400">
+                          {post.data.title}
+                        </h5>
+                      </div>
+                      {post.data.description && (
+                        <p class="mt-2 line-clamp-2 pl-[3.25rem] text-sm leading-6 text-slate-600 dark:text-slate-400">
+                          {post.data.description}
+                        </p>
+                      )}
+                    </a>
+                    {post.data.tags.length > 0 && (
+                      <div class="mt-2 flex flex-wrap gap-2 pl-[3.25rem]">
+                        {post.data.tags.map((tag) => <TagPill tag={tag} />)}
+                      </div>
+                    )}
+                  </li>
+                ))}
+              </ul>
+            </div>
+          ))}
+        </div>
+      </div>
+    ))}
+  </div>
+)}

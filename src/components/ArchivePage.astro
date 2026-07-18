@@ -1,0 +1,72 @@
+---
+import type { Post } from '../utils';
+import ArchiveList from './ArchiveList.astro';
+
+interface Props {
+  page: {
+    data: Post[];
+    total: number;
+    currentPage: number;
+    lastPage: number;
+    url: { current: string; prev?: string; next?: string };
+  };
+}
+
+const { page } = Astro.props;
+const pageNumbers = Array.from({ length: page.lastPage }, (_, i) => i + 1);
+const pageUrl = (n: number) => (n === 1 ? '/' : `/${n}`);
+---
+
+<section class="mx-auto max-w-5xl px-4 pb-20 pt-12 sm:px-6">
+  <div class="mb-8 flex items-baseline justify-between">
+    <h2 class="text-2xl font-bold text-slate-900 dark:text-slate-100">归档</h2>
+    <span class="text-sm text-slate-400 dark:text-slate-500">共 {page.total} 篇</span>
+  </div>
+
+  <ArchiveList posts={page.data} />
+
+  {
+    page.lastPage > 1 && (
+      <nav class="mt-12 flex flex-wrap items-center justify-center gap-2">
+        <a
+          href={page.url.prev}
+          class:list={[
+            'inline-flex items-center rounded-full border px-4 py-2 text-sm font-medium transition',
+            'border-slate-200 text-slate-600 hover:border-brand-300 hover:text-brand-700',
+            'dark:border-slate-700 dark:text-slate-300 dark:hover:border-brand-700 dark:hover:text-brand-300',
+            !page.url.prev && 'pointer-events-none opacity-50',
+          ]}
+        >
+          上一页
+        </a>
+
+        {pageNumbers.map((n) => (
+          <a
+            href={pageUrl(n)}
+            aria-current={n === page.currentPage ? 'page' : undefined}
+            class:list={[
+              'inline-flex h-9 min-w-[2.25rem] items-center justify-center rounded-full border px-3 text-sm font-medium transition',
+              n === page.currentPage
+                ? 'border-brand-600 bg-brand-600 text-white'
+                : 'border-slate-200 text-slate-600 hover:border-brand-300 hover:text-brand-700 dark:border-slate-700 dark:text-slate-300 dark:hover:border-brand-700 dark:hover:text-brand-300',
+            ]}
+          >
+            {n}
+          </a>
+        ))}
+
+        <a
+          href={page.url.next}
+          class:list={[
+            'inline-flex items-center rounded-full border px-4 py-2 text-sm font-medium transition',
+            'border-slate-200 text-slate-600 hover:border-brand-300 hover:text-brand-700',
+            'dark:border-slate-700 dark:text-slate-300 dark:hover:border-brand-700 dark:hover:text-brand-300',
+            !page.url.next && 'pointer-events-none opacity-50',
+          ]}
+        >
+          下一页
+        </a>
+      </nav>
+    )
+  }
+</section>
