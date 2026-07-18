@@ -1,6 +1,6 @@
-# Nianmng 的技术博客
+# Nianmng 的博客
 
-一个基于 [Astro](https://astro.build) + Tailwind CSS 构建的**静态个人技术博客**，支持 Markdown 写作、代码语法高亮、标签分类、暗色模式、站内搜索、RSS 订阅、评论系统与响应式布局。
+一个基于 [Astro](https://astro.build) + Tailwind CSS 构建的**静态个人博客**，支持 Markdown 写作、代码语法高亮、标签分类、暗色模式、站内搜索、RSS 订阅、评论系统与响应式布局。
 
 ## ✨ 功能特性
 

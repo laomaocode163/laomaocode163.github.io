@@ -1,6 +1,6 @@
 # 博客项目架构梳理与优化设计方案
 
-> 分析对象：`nianmng-blog`（基于 Astro 5 + Tailwind CSS 3 的静态技术博客）
+> 分析对象：`nianmng-blog`（基于 Astro 5 + Tailwind CSS 3 的静态个人博客）
 > 分析日期：2026-07-18
 > 范围：功能模块梳理 / 现状问题识别 / 优化设计方案
 

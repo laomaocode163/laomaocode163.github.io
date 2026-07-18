@@ -1,7 +1,7 @@
 // 站点级配置：新增页面或修改信息时，集中在此维护即可。
-export const SITE_TITLE = '念铭的技术博客';
+export const SITE_TITLE = '念铭的博客';
 export const SITE_DESCRIPTION =
-  '一个专注于编程、开发与工具分享的个人技术博客。记录学习过程中的思考与实践。';
+  '一个专注于编程、开发与工具分享的个人博客，也记录生活与思考。';
 export const AUTHOR = {
   name: '念铭',
   avatar: '/avatar.svg',
