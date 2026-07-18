@@ -3,7 +3,7 @@ title: Git 工作流最佳实践：从独狼到团队协作
 description: 深入讲解 Git Flow、GitHub Flow 和 Trunk-Based Development 三种主流分支策略，附完整命令示例与流程图，帮你选择最适合团队的工作流。
 pubDate: 2026-07-14
 updatedDate: 2026-07-17
-tags: [Git, DevOps, 工具, 协作]
+tags: [测试]
 author: 念铭
 ---
 

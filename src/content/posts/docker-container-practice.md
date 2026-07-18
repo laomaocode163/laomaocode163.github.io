@@ -2,7 +2,7 @@
 title: Docker 容器化实战：从 Dockerfile 到多服务编排
 description: 手把手教你编写 Dockerfile、使用 Docker Compose 编排多容器应用，附架构图与常用命令备忘，适合容器化入门与进阶。
 pubDate: 2026-07-13
-tags: [Docker, DevOps, 工具]
+tags: [测试]
 author: 念铭
 ---
 

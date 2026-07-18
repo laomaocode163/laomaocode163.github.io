@@ -2,7 +2,7 @@
 title: 使用 Astro 快速搭建一个静态博客
 description: 从零开始，用 Astro + Content Collections 构建一个支持 Markdown 的静态技术博客，体验零运行时 JS 的极速体验。
 pubDate: 2026-07-15
-tags: [Astro, 前端, 静态站点]
+tags: [测试]
 author: 念铭
 ---
 

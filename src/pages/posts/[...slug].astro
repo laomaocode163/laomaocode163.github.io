@@ -4,7 +4,6 @@ import BaseLayout from '../../layouts/BaseLayout.astro';
 import JsonLd from '../../components/JsonLd.astro';
 import TagPill from '../../components/TagPill.astro';
 import TableOfContents from '../../components/TableOfContents.astro';
-import Giscus from '../../components/Giscus.astro';
 import MermaidRender from '../../components/MermaidRender.astro';
 import { AUTHOR } from '../../consts';
 import { getPublishedPosts } from '../../utils';
@@ -123,9 +122,6 @@ const next = index >= 0 && index < all.length - 1 ? all[index + 1] : null;
             )
           }
         </nav>
-
-        <!-- 评论 -->
-        <Giscus />
       </article>
 
       <!-- 侧栏目录（桌面端 sticky） -->

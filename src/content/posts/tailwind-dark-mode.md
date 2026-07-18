@@ -2,7 +2,7 @@
 title: Tailwind CSS 暗色模式的三种实现策略
 description: 深入对比 Tailwind 中基于 class、media 与系统偏好的暗色模式方案，并给出防闪烁（FOUC）的最佳实践。
 pubDate: 2026-07-12
-tags: [Tailwind CSS, 前端, CSS]
+tags: [测试]
 author: 念铭
 ---
 
