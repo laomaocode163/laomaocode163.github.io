@@ -1,5 +1,5 @@
 ---
-import { SOCIAL_LINKS, SITE_TITLE } from '../consts';
+import { SITE_TITLE } from '../consts';
 const year = new Date().getFullYear();
 ---
 
@@ -16,19 +16,5 @@ const year = new Date().getFullYear();
         rel="noopener">Astro</a
       > 强力驱动.
     </p>
-    <div class="flex items-center gap-4">
-      {
-        SOCIAL_LINKS.map((link) => (
-          <a
-            href={link.href}
-            class="text-sm text-slate-500 transition hover:text-brand-600 dark:text-slate-400 dark:hover:text-brand-400"
-            target="_blank"
-            rel="noopener"
-          >
-            {link.label}
-          </a>
-        ))
-      }
-    </div>
   </div>
 </footer>

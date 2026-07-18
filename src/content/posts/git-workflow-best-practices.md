@@ -4,7 +4,7 @@ description: 深入讲解 Git Flow、GitHub Flow 和 Trunk-Based Development 三
 pubDate: 2026-07-14
 updatedDate: 2026-07-17
 tags: [Git, DevOps, 工具, 协作]
-author: Nianmng
+author: 念铭
 ---
 
 ## 为什么需要 Git 工作流

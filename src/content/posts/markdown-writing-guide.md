@@ -3,7 +3,7 @@ title: 用 Markdown 高效写作技术文章
 description: 一份面向开发者的 Markdown 写作清单，涵盖标题层级、代码块、表格、引用等常用语法与排版建议。
 pubDate: 2026-07-03
 tags: [Markdown, 写作, 工具]
-author: Nianmng
+author: 念铭
 ---
 
 ## 标题层级要清晰
