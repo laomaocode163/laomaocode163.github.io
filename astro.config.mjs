@@ -3,8 +3,8 @@ import { defineConfig } from 'astro/config';
 import tailwind from '@astrojs/tailwind';
 import sitemap from '@astrojs/sitemap';
 
-// 部署时请将 site 改为你的正式域名
-const SITE = 'https://nianmng.example.com';
+// GitHub Pages 用户站点正式域名（仓库 laomaocode163.github.io）
+const SITE = 'https://laomaocode163.github.io';
 
 // CI 环境下强制校验：若仍为占位域名则阻断部署，避免全站绝对链接（canonical/OG/RSS/sitemap）错误
 if (process.env.CI && SITE.includes('example.com')) {
