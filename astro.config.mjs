@@ -3,8 +3,10 @@ import { defineConfig } from 'astro/config';
 import tailwind from '@astrojs/tailwind';
 import sitemap from '@astrojs/sitemap';
 
-// GitHub Pages 用户站点正式域名（仓库 laomaocode163.github.io）
-const SITE = 'https://laomaocode163.github.io';
+// 站点正式域名。默认指向 GitHub Pages 用户站点；
+// 部署到 Cloudflare / EdgeOne 时由各 workflow 通过 SITE_URL 环境变量覆盖，
+// 以保证 canonical / sitemap / RSS 等绝对链接指向正确的域名。
+const SITE = process.env.SITE_URL || 'https://laomaocode163.github.io';
 
 // CI 环境下强制校验：若仍为占位域名则阻断部署，避免全站绝对链接（canonical/OG/RSS/sitemap）错误
 if (process.env.CI && SITE.includes('example.com')) {

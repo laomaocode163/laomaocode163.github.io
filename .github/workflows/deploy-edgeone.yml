@@ -1,0 +1,41 @@
+name: Deploy to EdgeOne Pages
+
+on:
+  push:
+    branches: [main]
+  workflow_dispatch:
+
+concurrency:
+  group: 'edgeone'
+  cancel-in-progress: true
+
+env:
+  # 覆盖 Astro site，使 canonical/sitemap/RSS 指向 EdgeOne 域名。
+  # 若有自定义域名，请在仓库 Settings → Variables 中设置 EDGEONE_SITE_URL。
+  SITE_URL: ${{ vars.EDGEONE_SITE_URL || 'https://nianmng-blog.edgeone.app' }}
+
+jobs:
+  deploy:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Setup Node
+        uses: actions/setup-node@v4
+        with:
+          node-version: 22
+          cache: npm
+
+      - name: Install dependencies
+        run: npm ci
+
+      - name: Build (Astro + Pagefind)
+        run: npm run build
+
+      - name: Deploy to EdgeOne Pages
+        uses: TencentEdgeOne/edgeone-pages-action@v1
+        with:
+          token: ${{ secrets.EDGEONE_API_TOKEN }}
+          project-name: ${{ vars.EDGEONE_PROJECT_NAME || 'nianmng-blog' }}
+          build-path: './dist'
