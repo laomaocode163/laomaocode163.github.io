@@ -142,14 +142,12 @@ draft: false               # 可选，草稿设为 true 不发布
 
 ## 7. 部署方案
 
-支持四种部署方式：
+支持两种部署方式：
 
 | 平台 | 方案 | 配置文件 |
 | --- | --- | --- |
 | GitHub Pages | Actions 自动构建部署 | `.github/workflows/deploy.yml` |
 | Vercel | 导入仓库自动识别 | `vercel.json` |
-| Cloudflare Pages | Dashboard 或 Wrangler CLI | `wrangler.toml` |
-| EdgeOne Pages | 控制台导入仓库 | `edgeone.json` |
 
 ## 8. 验收标准
 

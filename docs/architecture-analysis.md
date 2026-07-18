@@ -15,7 +15,7 @@
 | 层级 | 模块 | 关键文件 | 核心职责 |
 | --- | --- | --- | --- |
 | 配置层 | 站点配置 | `src/consts.ts` | 站点名、作者信息、导航链接、社交链接集中维护 |
-| 配置层 | 构建配置 | `astro.config.mjs`、`tailwind.config.mjs`、`vercel.json`、`edgeone.json`、`wrangler.toml` | 集成（tailwind/sitemap）、Shiki 双主题、品牌色板/字体、部署目标 |
+| 配置层 | 构建配置 | `astro.config.mjs`、`tailwind.config.mjs`、`vercel.json` | 集成（tailwind/sitemap）、Shiki 双主题、品牌色板/字体、部署目标 |
 | 内容层 | 内容集合 | `src/content/config.ts` + `src/content/posts/*.md` | zod schema 校验 frontmatter；Markdown 文章源 |
 | 数据层 | 查询聚合 | `src/utils.ts` | `getPublishedPosts()`（排除草稿、按时间倒序）、`getTagCounts()`（标签计数） |
 | 外壳层 | 基础布局 | `src/layouts/BaseLayout.astro` | HTML 骨架、SEO/OG/Twitter Card、JSON-LD、主题防闪烁内联脚本、代码复制按钮脚本、字体引入 |

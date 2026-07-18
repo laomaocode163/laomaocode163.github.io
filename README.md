@@ -128,25 +128,3 @@ src/
 导入仓库后自动识别 Astro 项目，或使用 `vercel.json` 配置。
 
 一键部署：[![Deploy with Vercel](https://vercel.com/button)](https://vercel.com/new)
-
-### Cloudflare Pages
-
-**方式一（Dashboard）**：在 Cloudflare Pages 中连接 GitHub 仓库，构建设置：
-- 构建命令：`npm run build`
-- 输出目录：`dist`
-- Node.js 版本：20
-
-**方式二（CLI）**：使用 Wrangler CLI 部署
-```bash
-npm install -g wrangler
-wrangler login
-npx wrangler pages deploy dist --project-name=nianmng-blog
-```
-
-配置文件：`wrangler.toml`
-
-### EdgeOne Pages
-
-在 EdgeOne Pages 控制台中导入 GitHub 仓库，自动识别 Astro 框架。
-
-配置文件：`edgeone.json`
